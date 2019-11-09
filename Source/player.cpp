@@ -819,7 +819,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 
 void AddPlrMonstExper(int lvl, int exp, char pmask)
 {
-	int totplrs, i, e;
+	int totplrs, i;
 
 	totplrs = 0;
 	for (i = 0; i < MAX_PLRS; i++) {
@@ -829,9 +829,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	}
 
 	if (totplrs) {
-		e = exp / totplrs;
-		if (pmask & (1 << myplr))
-			AddPlrExperience(myplr, lvl, e);
+		AddPlrExperience(myplr, lvl, exp);
 	}
 }
 
@@ -1654,7 +1652,8 @@ void StartPlayerKill(int pnum, int earflag)
 		NetSendCmdParam1(TRUE, CMD_PLRDEAD, earflag);
 	}
 
-	diablolevel = gbMaxPlayers > 1 && plr[pnum].plrlevel == 16;
+	// diablolevel = gbMaxPlayers > 1 && plr[pnum].plrlevel == 16;
+	diablolevel = TRUE;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlayerKill: illegal player %d", pnum);
@@ -2490,6 +2489,10 @@ BOOL PlrHitPlr(int pnum, char p)
 {
 	BOOL rv;
 	int hit, hper, blk, blkper, dir, mind, maxd, dam, lvl, skdam, tac;
+
+	if (FriendlyMode) {
+		return FALSE;
+	}
 
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("PlrHitPlr: illegal target player %d", p);
