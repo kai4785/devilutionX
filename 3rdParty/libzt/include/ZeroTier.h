@@ -71,6 +71,8 @@ typedef int socklen_t;
 #include <stdint.h>
 #include <WS2tcpip.h>
 #include <Windows.h>
+#else
+#include <sys/socket.h>
 #endif
 
 #if defined(_MSC_VER)
